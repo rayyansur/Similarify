@@ -19,7 +19,7 @@ const RANGE_LABELS: Record<Range, string> = {
 function PlaylistCard({ playlist }: { playlist: SpotifyPlaylist }) {
   return (
     <a
-      href={playlist.external_urls?.spotify}
+      href={playlist.external_urls.spotify}
       target="_blank"
       rel="noopener noreferrer"
       className="card"
@@ -28,7 +28,7 @@ function PlaylistCard({ playlist }: { playlist: SpotifyPlaylist }) {
         alignItems: 'center',
         gap: '14px',
         padding: '12px 14px',
-        textDecoration: 'none',
+        cursor: 'pointer',
         color: 'inherit',
       }}
     >
@@ -72,11 +72,13 @@ function PlaylistCard({ playlist }: { playlist: SpotifyPlaylist }) {
             fontSize: '0.75rem',
             color: 'var(--muted)',
             marginTop: '2px',
+            fontStyle: playlist.items == null ? 'italic' : 'normal',
           }}
         >
-          {playlist.tracks.total} tracks
+          {playlist.items != null ? `${playlist.items.total} tracks` : 'This playlist is private'}
         </p>
       </div>
+      <span style={{ color: 'var(--subtle)', fontSize: '0.8rem', flexShrink: 0 }}>↗</span>
     </a>
   );
 }
@@ -87,7 +89,6 @@ export default function DashboardPage() {
   const [range, setRange] = useState<Range>('medium_term');
   const [roomCode, setRoomCode] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-
   useEffect(() => {
     if (!isAuthenticated()) {
       router.replace('/');
@@ -117,8 +118,10 @@ export default function DashboardPage() {
     onSuccess: (room) => setRoomCode(room.code),
   });
 
-  const shareLink =
-    roomCode ? `${window.location.origin}/room/${roomCode}` : null;
+  const [shareLink, setShareLink] = useState<string | null>(null);
+  useEffect(() => {
+    setShareLink(roomCode ? `${window.location.origin}/room/${roomCode}` : null);
+  }, [roomCode]);
 
   function copyLink() {
     if (!shareLink) return;
@@ -337,6 +340,7 @@ export default function DashboardPage() {
           </div>
         )}
       </main>
+
     </div>
   );
 }

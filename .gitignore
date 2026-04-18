@@ -38,3 +38,8 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+*CLAUDE.md
+*.sh
+DEPLOYMENT.md
+USER_STORIES.md

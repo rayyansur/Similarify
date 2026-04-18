@@ -1,5 +1,6 @@
 import type {
   CompareResult,
+  PlaylistArtist,
   PlaylistsResponse,
   Room,
   SpotifyArtist,
@@ -56,6 +57,8 @@ export const api = {
     topTracks: (timeRange = 'medium_term') =>
       request<TopItemsResponse<SpotifyTrack>>(`/me/top-tracks?time_range=${timeRange}`),
     playlists: () => request<PlaylistsResponse>('/me/playlists'),
+    playlistArtists: (playlistId: string) =>
+      request<PlaylistArtist[]>(`/me/playlists/${playlistId}/artists`),
   },
 
   rooms: {

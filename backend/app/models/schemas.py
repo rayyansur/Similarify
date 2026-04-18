@@ -43,6 +43,7 @@ class CommonArtist(BaseModel):
     name: str
     images: list[dict]
     genres: list[str]
+    spotify_url: str | None = None
 
 
 class CommonTrack(BaseModel):
@@ -50,10 +51,10 @@ class CommonTrack(BaseModel):
     name: str
     artists: list[dict]
     album: dict
+    spotify_url: str | None = None
 
 
 class CompareResult(BaseModel):
     common_artists: list[CommonArtist]
     common_tracks: list[CommonTrack]
-    common_genres: list[str]
     compatibility_score: float

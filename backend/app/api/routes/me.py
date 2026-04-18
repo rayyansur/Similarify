@@ -66,3 +66,46 @@ async def playlists(
 ):
     token = await spotify_svc.get_valid_token(user, db)
     return await spotify_svc.get_playlists(token)
+
+
+@router.get("/playlists/{playlist_id}/artists")
+async def playlist_artists(
+    playlist_id: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    token = await spotify_svc.get_valid_token(user, db)
+    items = await spotify_svc.get_playlist_tracks(token, playlist_id)
+
+    artist_counts: dict[str, int] = {}
+    artist_names: dict[str, str] = {}
+    for item in items:
+        track = item.get("track")
+        if not track:
+            continue
+        for artist in track.get("artists", []):
+            aid = artist["id"]
+            artist_counts[aid] = artist_counts.get(aid, 0) + 1
+            artist_names[aid] = artist["name"]
+
+    top_ids = sorted(artist_counts, key=lambda x: -artist_counts[x])[:20]
+    if not top_ids:
+        return []
+
+    details = await spotify_svc.get_artists_batch(token, top_ids)
+
+    result = []
+    for artist in details:
+        if not artist:
+            continue
+        aid = artist["id"]
+        images = artist.get("images", [])
+        result.append({
+            "id": aid,
+            "name": artist["name"],
+            "image_url": images[0]["url"] if images else None,
+            "track_count": artist_counts.get(aid, 0),
+            "genres": artist.get("genres", []),
+        })
+
+    return sorted(result, key=lambda x: -x["track_count"])

@@ -132,49 +132,8 @@ export function CompatibilityScore({ score }: Props) {
             marginTop: '6px',
           }}
         >
-          Based on shared artists, tracks &amp; genres
+          Based on your listening history
         </p>
-      </div>
-
-      {/* Breakdown bars */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '20px',
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px solid var(--border)',
-          borderRadius: '12px',
-          padding: '16px 24px',
-        }}
-      >
-        {[
-          { label: 'Artists', weight: '40%' },
-          { label: 'Tracks', weight: '40%' },
-          { label: 'Genres', weight: '20%' },
-        ].map(({ label, weight }) => (
-          <div key={label} style={{ textAlign: 'center' }}>
-            <p
-              style={{
-                fontFamily: 'var(--font-syne)',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                color: 'var(--subtle)',
-              }}
-            >
-              {weight}
-            </p>
-            <p
-              style={{
-                fontFamily: 'var(--font-dm-sans)',
-                fontSize: '0.72rem',
-                color: 'var(--muted)',
-                marginTop: '3px',
-              }}
-            >
-              {label}
-            </p>
-          </div>
-        ))}
       </div>
     </div>
   );

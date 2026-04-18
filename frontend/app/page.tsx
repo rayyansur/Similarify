@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, isAuthenticated } from '@/lib/api';
 
+const BAR_DURATIONS = [1.5, 1.0, 1.4, 0.9, 1.3, 0.85, 1.25, 1.2, 0.88, 1.45, 0.97, 1.1];
+
 function SoundBars() {
   return (
     <div className="sound-bars">
@@ -12,7 +14,7 @@ function SoundBars() {
           key={i}
           className="sound-bar animate-[soundBar_ease-in-out_infinite]"
           style={{
-            animationDuration: `${0.8 + Math.random() * 0.8}s`,
+            animationDuration: `${BAR_DURATIONS[i]}s`,
             animationDelay: `${i * 0.08}s`,
             opacity: 0.4 + h * 0.6,
           }}

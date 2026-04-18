@@ -36,7 +36,8 @@ export interface SpotifyPlaylist {
   name: string;
   description: string | null;
   images: SpotifyImage[];
-  tracks: { total: number };
+  items: { href: string; total: number } | null;
+  public: boolean | null;
   owner: { display_name: string };
   external_urls: { spotify: string };
 }
@@ -61,6 +62,7 @@ export interface CommonArtist {
   name: string;
   images: SpotifyImage[];
   genres: string[];
+  spotify_url: string | null;
 }
 
 export interface CommonTrack {
@@ -68,12 +70,12 @@ export interface CommonTrack {
   name: string;
   artists: { id: string; name: string }[];
   album: SpotifyAlbum;
+  spotify_url: string | null;
 }
 
 export interface CompareResult {
   common_artists: CommonArtist[];
   common_tracks: CommonTrack[];
-  common_genres: string[];
   compatibility_score: number;
 }
 
@@ -82,4 +84,12 @@ export interface Room {
   code: string;
   created_by: number;
   created_at: string;
+}
+
+export interface PlaylistArtist {
+  id: string;
+  name: string;
+  image_url: string | null;
+  track_count: number;
+  genres: string[];
 }

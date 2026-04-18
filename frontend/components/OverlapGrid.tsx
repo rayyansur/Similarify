@@ -45,8 +45,11 @@ export function ArtistOverlapGrid({ artists }: ArtistGridProps) {
       }}
     >
       {artists.map((artist) => (
-        <div
+        <a
           key={artist.id}
+          href={artist.spotify_url ?? `https://open.spotify.com/artist/${artist.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="card"
           style={{
             display: 'flex',
@@ -54,7 +57,8 @@ export function ArtistOverlapGrid({ artists }: ArtistGridProps) {
             alignItems: 'center',
             padding: '16px 12px',
             gap: '10px',
-            cursor: 'default',
+            cursor: 'pointer',
+            textDecoration: 'none',
           }}
         >
           <div
@@ -105,7 +109,7 @@ export function ArtistOverlapGrid({ artists }: ArtistGridProps) {
               </p>
             )}
           </div>
-        </div>
+        </a>
       ))}
     </div>
   );
@@ -117,14 +121,19 @@ export function TrackOverlapGrid({ tracks }: TrackGridProps) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       {tracks.map((track) => (
-        <div
+        <a
           key={track.id}
+          href={track.spotify_url ?? `https://open.spotify.com/track/${track.id}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="card"
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '14px',
             padding: '12px 16px',
+            textDecoration: 'none',
+            cursor: 'pointer',
           }}
         >
           <div
@@ -175,35 +184,8 @@ export function TrackOverlapGrid({ tracks }: TrackGridProps) {
               {track.artists.map((a) => a.name).join(', ')}
             </p>
           </div>
-          {/* Shared indicator */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px',
-              flexShrink: 0,
-            }}
-          >
-            <div
-              style={{
-                width: '6px',
-                height: '6px',
-                borderRadius: '50%',
-                background: 'var(--green)',
-              }}
-            />
-            <span
-              style={{
-                fontFamily: 'var(--font-dm-sans)',
-                fontSize: '0.7rem',
-                color: 'var(--green)',
-                fontWeight: 500,
-              }}
-            >
-              shared
-            </span>
-          </div>
-        </div>
+          <span style={{ color: 'var(--subtle)', fontSize: '0.8rem', flexShrink: 0 }}>↗</span>
+        </a>
       ))}
     </div>
   );

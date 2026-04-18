@@ -59,7 +59,23 @@ async def compare(code: str, user: User = Depends(get_current_user), db: Session
     users = db.query(User).filter(User.id.in_(user_ids)).all()
     user_map = {u.id: u for u in users}
 
-    top_data_a = await _get_or_fetch_top_data(user_map[user_ids[0]], db)
-    top_data_b = await _get_or_fetch_top_data(user_map[user_ids[1]], db)
+    top_data_a = await _get_merged_top_data(user_map[user_ids[0]], db)
+    top_data_b = await _get_merged_top_data(user_map[user_ids[1]], db)
 
     return compute_comparison(top_data_a, top_data_b)
+
+
+async def _get_merged_top_data(user: User, db: Session) -> dict:
+    """Merge top artists/tracks across all time ranges for broader overlap."""
+    merged_artists: dict = {}
+    merged_tracks: dict = {}
+    for time_range in ("short_term", "medium_term", "long_term"):
+        data = await _get_or_fetch_top_data(user, db, time_range)
+        for a in data["artists"].get("items", []):
+            merged_artists.setdefault(a["id"], a)
+        for t in data["tracks"].get("items", []):
+            merged_tracks.setdefault(t["id"], t)
+    return {
+        "artists": {"items": list(merged_artists.values())},
+        "tracks": {"items": list(merged_tracks.values())},
+    }

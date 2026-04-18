@@ -6,13 +6,13 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { api, isAuthenticated } from '@/lib/api';
 import { CompatibilityScore } from '@/components/CompatibilityScore';
 import { ArtistOverlapGrid, TrackOverlapGrid } from '@/components/OverlapGrid';
-import { GenreVenn } from '@/components/GenreVenn';
 
-type OverlapTab = 'artists' | 'tracks' | 'genres';
+type OverlapTab = 'artists' | 'tracks';
 
 function WaitingRoom({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
-  const shareLink = `${window.location.origin}/room/${code}`;
+  const [shareLink, setShareLink] = useState('');
+  useEffect(() => { setShareLink(`${window.location.origin}/room/${code}`); }, [code]);
 
   function copy() {
     navigator.clipboard.writeText(shareLink);
@@ -283,7 +283,6 @@ export default function RoomPage() {
               {[
                 { label: 'Shared Artists', count: compare.data.common_artists.length },
                 { label: 'Shared Tracks', count: compare.data.common_tracks.length },
-                { label: 'Shared Genres', count: compare.data.common_genres.length },
               ].map(({ label, count }) => (
                 <div
                   key={label}
@@ -322,8 +321,8 @@ export default function RoomPage() {
 
             {/* Overlap tabs */}
             <div>
-              <div className="tab-bar" style={{ marginBottom: '20px', maxWidth: '360px' }}>
-                {(['artists', 'tracks', 'genres'] as OverlapTab[]).map((t) => (
+              <div className="tab-bar" style={{ marginBottom: '20px', width: 'fit-content' }}>
+                {(['artists', 'tracks'] as OverlapTab[]).map((t) => (
                   <button
                     key={t}
                     onClick={() => setActiveTab(t)}
@@ -341,9 +340,7 @@ export default function RoomPage() {
               {activeTab === 'tracks' && (
                 <TrackOverlapGrid tracks={compare.data.common_tracks} />
               )}
-              {activeTab === 'genres' && (
-                <GenreVenn genres={compare.data.common_genres} />
-              )}
+
             </div>
           </div>
         )}
